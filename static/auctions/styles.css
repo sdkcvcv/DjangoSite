@@ -1,0 +1,23 @@
+body {
+    padding: 10px;
+}
+
+.tclass {
+    background: tomato;
+    height: 25px;
+    width: 170px;
+}
+
+.dropdown {
+  position: relative;}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    z: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}

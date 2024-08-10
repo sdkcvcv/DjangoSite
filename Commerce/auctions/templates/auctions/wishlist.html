@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>My Wishlist</h2>
+    {% for auction in auctions %}
+        <div>
+            <a href="{% url 'auction' auction.id %}">
+                <p>{{ auction.title }}</p>
+            </a>
+            {% if auction.image %}
+                <img src="{{ auction.image.url }}">
+            {% endif %}
+            {% if user.is_authenticated %}
+                <form action="{% url 'wishlist_remove' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="auc_id" value="{{ auction.id }}">
+                    <input type="submit" value="Remove from wishlist">
+                </form>
+            {% endif %}
+            {% if auction.bet_auction.all %}
+                <p>{{ auction.bet_auction.all.last.value }}$</p>
+            {% else %}
+                <p>{{ auction.value }}$</p>
+            {% endif %}
+            <p>{{ auction.content }}</p>
+        </div>
+    {% empty %}
+        <p>No auction is added</p>
+    {% endfor %}
+
+{% endblock %}

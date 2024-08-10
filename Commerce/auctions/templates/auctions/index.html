@@ -1,0 +1,60 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% for auction in auctions %}
+        <div>
+            <a href="{% url 'auction' auction.id %}">
+                <p>{{ auction.title }}</p>
+            </a>
+            {% if auction.image %}
+                <img src="{{ auction.image.url }}">
+            {% endif %}
+            <div class="tclass"></div>
+            {% if user.is_authenticated %}
+                {% if auction in wish %}
+                    <form action="{% url 'wishlist_remove' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="auc_id" value="{{ auction.id }}">
+                        <input type="submit" value="Remove from wishlist">
+                    </form>
+                {% else %}
+                    <form action="{% url 'wishlist' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="auc_id" value="{{ auction.id }}">
+                        <input type="submit" value="Add to wishlist">
+                    </form>
+                {% endif %}
+
+                {% for order in orders %}
+                    {% if auction == order.auction %}
+                        <form action="{% url 'order_remove' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="auc_id" value="{{ order.id }}">
+                            <input type="submit" value="Remove from orders">
+                        </form>
+                        <p>Quantity: {{ order.quantity }}</p>
+                    {% endif %}
+                {% endfor %}
+
+                    <form action="{% url 'orders' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="auc_id" value="{{ auction.id }}">
+                        <input type="submit" value="Add">
+                    </form>
+
+            {% endif %}
+
+            {% if auction.bet_auction.all %}
+                <p>{{ auction.bet_auction.all.last.value }} $</p>
+            {% else %}
+                <p>{{ auction.value }} $</p>
+            {% endif %}
+
+            <p>{{ auction.content }}</p>
+        </div>
+    {% empty %}
+        <p>No Auction Available</p>
+    {% endfor %}
+
+{% endblock %}

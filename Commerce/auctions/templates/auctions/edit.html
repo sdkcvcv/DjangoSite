@@ -1,0 +1,10 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+        <form action="{% url 'update_auc' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="auc_id" value="{{ auc_id }}">
+            {{form}}
+            <input type="submit" value="Оновити">
+        </form>
+{% endblock %}
